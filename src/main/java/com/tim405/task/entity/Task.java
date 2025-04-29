@@ -14,6 +14,9 @@ public class Task {
     String description;
     Long userId;
 
+    public Task() {
+    }
+
     public Task(String title, String description, Long userId) {
         this.title = title;
         this.description = description;
@@ -78,7 +81,7 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", name='" + title + '\'' +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", userId=" + userId +
                 '}';
