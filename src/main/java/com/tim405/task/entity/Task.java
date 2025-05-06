@@ -1,18 +1,16 @@
 package com.tim405.task.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String title;
-    String description;
-    Long userId;
+    private Long id;
+    private String title;
+    private String description;
+    private Long userId;
 
     public Task() {
     }
