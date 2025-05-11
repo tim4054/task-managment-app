@@ -6,9 +6,11 @@ import com.tim405.task.aspect.annotations.Loggable;
 import com.tim405.task.dto.TaskRequestDTO;
 import com.tim405.task.dto.TaskResponseDTO;
 import com.tim405.task.entity.Task;
+import com.tim405.task.entity.TaskStatus;
 import com.tim405.task.exception.TaskNotFoundException;
 import com.tim405.task.repository.TaskRepository;
 import com.tim405.task.service.TaskService;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.taskRepository = taskRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -80,6 +84,28 @@ public class TaskServiceImpl implements TaskService {
         response.setTitle(task.getTitle());
         response.setDescription(task.getDescription());
         response.setUserId(task.getUserId());
+        response.setStatus(task.getTaskStatus());
         return response;
+    }
+
+    @Override
+    @Loggable
+    @LogExecutionTime
+    @LogResult
+    public TaskResponseDTO updateTaskStatus(Long taskId, TaskStatus newStatus) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+
+        task.setTaskStatus(newStatus);
+
+        Task updatedTask = taskRepository.save(task);
+
+        kafkaTemplate.send(
+                "task-updates",
+                taskId.toString(),
+                newStatus.name()
+        );
+
+        return mapToResponse(updatedTask);
     }
 }

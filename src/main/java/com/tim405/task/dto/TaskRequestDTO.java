@@ -1,9 +1,12 @@
 package com.tim405.task.dto;
 
+import com.tim405.task.entity.TaskStatus;
+
 public class TaskRequestDTO {
     private String title;
     private String description;
     private Long userId;
+    private TaskStatus status;
 
     public String getTitle() {
         return title;
@@ -27,5 +30,13 @@ public class TaskRequestDTO {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 }

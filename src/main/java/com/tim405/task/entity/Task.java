@@ -12,6 +12,9 @@ public class Task {
     private String description;
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;
+
     public Task() {
     }
 
@@ -19,6 +22,7 @@ public class Task {
         this.title = title;
         this.description = description;
         this.userId = userId;
+        this.taskStatus = TaskStatus.NEW;
     }
 
     public Long getId() {
@@ -53,6 +57,14 @@ public class Task {
         this.userId = userId;
     }
 
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,7 +75,8 @@ public class Task {
         if (!id.equals(task.id)) return false;
         if (!title.equals(task.title)) return false;
         if (!description.equals(task.description)) return false;
-        return userId.equals(task.userId);
+        if (!userId.equals(task.userId)) return false;
+        return taskStatus == task.taskStatus;
     }
 
     @Override
@@ -72,6 +85,7 @@ public class Task {
         result = 31 * result + title.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + userId.hashCode();
+        result = 31 * result + taskStatus.hashCode();
         return result;
     }
 
@@ -82,6 +96,7 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", userId=" + userId +
+                ", taskStatus=" + taskStatus +
                 '}';
     }
 }
