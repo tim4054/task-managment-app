@@ -2,6 +2,7 @@ package com.tim405.task.controller;
 
 import com.tim405.task.dto.TaskRequestDTO;
 import com.tim405.task.dto.TaskResponseDTO;
+import com.tim405.task.entity.TaskStatus;
 import com.tim405.task.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,10 @@ public class TaskController {
     @GetMapping
     public List<TaskResponseDTO> getAllTasks() {
         return taskService.getAllTasks();
+    }
+
+    @PutMapping("/set-status/{id}")
+    public TaskResponseDTO updateTaskStatus(@PathVariable Long id, @RequestParam TaskStatus taskStatus) {
+        return taskService.updateTaskStatus(id, taskStatus);
     }
 }
