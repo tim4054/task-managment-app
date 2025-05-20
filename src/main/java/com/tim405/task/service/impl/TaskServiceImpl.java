@@ -96,16 +96,21 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
-        task.setTaskStatus(newStatus);
+        TaskStatus oldStatus = task.getTaskStatus();
 
-        Task updatedTask = taskRepository.save(task);
+        if (!oldStatus.equals(newStatus)) {
+            task.setTaskStatus(newStatus);
+            Task updatedTask = taskRepository.save(task);
 
-        kafkaTemplate.send(
-                "task-updates",
-                taskId.toString(),
-                newStatus.name()
-        );
+            kafkaTemplate.send(
+                    "task-updates",
+                    taskId.toString(),
+                    newStatus.name()
+            );
 
-        return mapToResponse(updatedTask);
+            return mapToResponse(updatedTask);
+        }
+
+        return mapToResponse(task);
     }
 }

@@ -1,6 +1,7 @@
 package com.tim405.task.service.impl;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -10,6 +11,13 @@ import java.time.LocalDateTime;
 
 @Service
 public class NotificationService {
+
+    @Value("${notification.email.from}")
+    private String emailSender;
+
+    @Value("${notification.email.to}")
+    private String emailReceiver;
+
     private final JavaMailSender mailSender;
 
     public NotificationService(JavaMailSender mailSender) {
@@ -18,8 +26,8 @@ public class NotificationService {
 
     public void sendStatusChangeNotification(Long taskId, String newStatus) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tim4054@gmail.com");
-        message.setTo("tim405y@yandex.ru");
+        message.setFrom(emailSender);
+        message.setTo(emailReceiver);
         message.setSubject("Task Status Update");
         message.setText(String.format(
                 "Task ID: %d\nNew Status: %s\nTime: %s",
