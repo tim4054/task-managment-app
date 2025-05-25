@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url:
+  kafka:
+    consumer:
+      group-id: test-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      missing-topics-fatal: false
